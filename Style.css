@@ -1,0 +1,8 @@
+div#canvasDiv{
+    border: 1px solid #000;
+    background-image: url(Media_Visuel/decors/decors_grotte.jpg);
+    background-position-y: -30px;
+    background-position-x: -50px;
+    background-size: 305% 105%;
+    background-repeat: no-repeat;
+}

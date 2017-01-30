@@ -1,0 +1,355 @@
+﻿/* ASMR */
+	DROP TABLE asmr;
+
+	CREATE TABLE IF NOT EXISTS asmr (
+  idAsmr int(250) NOT NULL AUTO_INCREMENT,
+  luminositeAsmr int(10) NOT NULL,
+  volumeAsmr int(10) NOT NULL
+);
+
+
+	ALTER TABLE asmr
+ ADD CONSTRAINT pk_AsmrId PRIMARY KEY (idAsmr);
+
+
+/* HISTOIRE */
+	DROP TABLE histoire;
+
+	CREATE TABLE IF NOT EXISTS histoire (
+  idHistoire int(250) NOT NULL AUTO_INCREMENT,
+  titreHistoire varchar(30) NOT NULL DEFAULT 'Mon Histoire', idUtilisateur int,idUnivers int,idUtilisateur
+ int);
+
+	ALTER TABLE 
+histoire ADD CONSTRAINT pk_HistoireID PRIMARY KEY (idHistoire);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Utilisateur FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Univers FOREIGN KEY (idUnivers) REFERENCES univers(idUnivers);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Asmr FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur);
+
+/* MEDIA */
+	DROP TABLE media;
+
+	CREATE TABLE IF NOT EXISTS media (
+  idMedia int(250) NOT NULL AUTO_INCREMENT,
+  designationMedia varchar(100) NOT NULL,
+  urlMedia varchar(150) NOT NULL
+);
+
+	ALTER TABLE media
+ ADD CONSTRAINT pk_MediaID PRIMARY KEY (idMedia);
+	
+/* PARCOUR */
+	DROP TABLE parcour;
+
+	CREATE TABLE IF NOT EXISTS parcour (
+  idParcour int(250) NOT NULL AUTO_INCREMENT,
+  nomParcour varchar(45) NOT NULL,
+  niveauParcour int(10) NOT NULL,
+  typeParcour varchar(45) NOT NULL
+);
+
+	ALTER TABLE parcour
+ ADD CONSTRAINT pk_ParcourID PRIMARY KEY (idParcour);
+
+/* PERSONNAGE */
+	DROP TABLE personage;
+
+	CREATE TABLE IF NOT EXISTS personnage (
+  idPersonnage int(250) NOT NULL AUTO_INCREMENT,
+  nomPersonnage varchar(45) NOT NULL,
+  descriptionPersonnage varchar(250) NOT NULL,
+  coutPersonnage int(100) NOT NULL,
+  disponiblePersonnage varchar(45) NOT NULL
+);
+	
+	ALTER TABLE personnage
+ ADD CONSTRAINT pk_PersonnageID PRIMARY KEY (idPersonnage);
+
+/* TYPEPERSONNAGE */
+	DROP TABLE typePersonnage;
+
+	CREATE TABLE IF NOT EXIST typePersonnage ( idTypePersonnage int(250) NOT NULL AUTO_INCREMENT, nomTypePersonnage varchar(45), bActiveTypePersonnage int(2), idPersonnage int);
+
+	ALTER TABLE typePersonnage ADD CONSTRAINT pk_TypePersonnageID PRIMARY KEY (idPersonnage);
+	ALTER TABLE typePersonnage ADD CONSTRAINT fk_TypePersonnage_Personnage FOREIGN KEY (idPersonnage) REFERENCES personnage(idPersonnage );
+
+/* TYPEMEDIA */
+	DROP TABLE typemedia;
+
+
+	CREATE TABLE IF NOT EXISTS typemedia (
+  idTypeMedia int(250) NOT NULL AUTO_INCREMENT,
+  typeTypeMedia varchar(45) NOT NULL, idMedia int
+);
+
+	ALTER TABLE typemedia
+ ADD CONSTRAINT pk_TypeMediaID PRIMARY KEY (idTypeMedia);
+	ALTER TABLE typemedia ADD CONSTRAINT fk_TypeMedia_Media FOREIGN KEY (idMedia) REFERENCES media(idMedia);
+
+/* UNIVERS */
+	DROP TABLE univers;
+
+
+	CREATE TABLE IF NOT EXISTS univers (
+  idUnivers int(250) NOT NULL AUTO_INCREMENT,
+  nomUnivers varchar(50) NOT NULL,
+  descriptionUnivers varchar(250) NOT NULL,
+  coutUnivers int(20) NOT NULL,
+  disponibleUnivers varchar(45) NOT NULL
+);
+	
+	ALTER TABLE univers
+ ADD CONSTRAINT pk_UniversID PRIMARY KEY (idUnivers);
+
+/* UTILISATEUR */
+	DROP TABLE utilisateur;
+
+	CREATE TABLE IF NOT EXISTS utilisateur (
+  idUtilisateur int(250) NOT NULL AUTO_INCREMENT,
+  pseudoUtilisateur varchar(20) DEFAULT NULL,
+  ageUtilisateur date DEFAULT NULL,
+  creditUtilisateur int(100) DEFAULT NULL
+);
+
+	ALTER TABLE utilisateur
+ ADD CONSTRAINT pk_UtilisateurID PRIMARY KEY (idUtilisateur);
+
+/* OBSTACLE */
+	DROP TABLE obstacle;
+
+	CREATE TABLE IF NOT EXISTS obstacle (  histoire_IdHistoire int, parcour_IdParcour int);
+
+	ALTER TABLE obstacle ADD CONSTRAINT pk_ObstacleID PRIMARY KEY (histoire_IdHistoire,parcour_IdParcour);
+	ALTER TABLE obstacle ADD CONSTRAINT fk_Obstacle_Histoire FOREIGN KEY (histoire_IdHistoire) REFERENCES histoire(idHistoire);
+	ALTER TABLE obstacle ADD CONSTRAINT fk_Obstacle_Parcour FOREIGN KEY (parcour_IdParcour) REFERENCES parcour(idParcour);
+
+/* ALLEGENCE*/
+	DROP TABLE ALLEGENCE*/
+
+	CREATE TABLE IF NOT EXISTS ALLEGENCE (  histoire_IdHistoire int, personnage_IdPersonnage int, typeAllegence int(1) NOT NULL DEFAULT '1' COMMENT '0 = ennemis // 1 = amis');
+
+	ALTER TABLE ALLEGENCE ADD CONSTRAINT pk_AllegenceID PRIMARY KEY (histoire_IdHistoire, personnage_IdPersonnage);
+	ALTER TABLE ALLEGENCE ADD CONSTRAINT fk_Allegence_Histoire FOREIGN KEY (histoire_IdHistoire) REFERENCES histoire(idHistoire);
+	ALTER TABLE ALLEGENCE ADD CONSTRAINT fk_Allegence_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+
+/* DECOR */
+	DROP TABLE decor;
+
+	CREATE TABLE IF NOT EXISTS decor (  parcour_IdParcour int, media_IdMedia int);
+
+	ALTER TABLE decor ADD CONSTRAINT pk_DecorID PRIMARY KEY (parcour_IdParcour, media_IdMedia);
+	ALTER TABLE decor ADD CONSTRAINT fk_Decor_Parcour FOREIGN KEY parcour_IdParcour REFENRECES parcour(idParcour);
+	ALTER TABLE decor ADD CONSTRAINT fk_Decor_Media FOREIGN KEY media_IdMedia REFENRECES media(idMedia);
+
+/* PERSONALISATION */
+	DROP TABLE personalisation;
+
+	CREATE TABLE IF NOT EXISTS personalisation (  personnage_IdPersonnage int, accessoire_IdAccessoire int);
+
+	ALTER TABLE personalisation ADD CONSTRAINT pk_PersonalisationID PRIMARY KEY (personnage_IdPersonnage, accessoire_IdAccessoire);
+	ALTER TABLE personalisation ADD CONSTRAINT fk_Personalisation_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE personalisation ADD CONSTRAINT fk_Personalisation_Accessoire FOREIGN KEY (accessoire_IdAccessoire) REFERENCES accessoire(idAccessoire);
+
+/* ACTION */
+	DROP TABLE actionPerso;
+
+	CREATE TABLE IF NOT EXISTS actionPerso (  personnage_IdPersonnage int, media_IdMedia int, descriptionAction varchar(100), positionX int(10), positionY int(10) );
+
+	ALTER TABLE action ADD CONSTRAINT pk_ActionID PRIMARY KEY (personnage_IdPersonnage, media_IdMedia);
+	ALTER TABLE action ADD CONSTRAINT fk_Action_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE action ADD CONSTRAINT fk_Action_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+
+/* CONTENU */
+	DROP TABLE contenu;
+
+	CREATE TABLE IF NOT EXISTS contenu (  univers_IdUnivers int, media_IdMedia int);
+
+	ALTER TABLE contenu ADD CONSTRAINT pk_ContenuID PRIMARY KEY (univers_IdUnivers, media_IdMedia);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Contenu_Univers FOREIGN KEY (univers_IdUnivers) REFERENCES univers(idUnivers);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Contenu_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+
+/* FONCTION */
+	DROP TABLE fonction;
+
+	CREATE TABLE IF NOT EXISTS fonction ( media_IdMedia int, asmr_IdAsmr int);
+
+	ALTER TABLE contenu ADD CONSTRAINT pk_FonctionID PRIMARY KEY (media_IdMedia, asmr_IdAsmr);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Fonction_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Fonction_Asmr FOREIGN KEY (asmr_IdAsmr) REFERENCES media(idAsmr);
+
+/* ACCESSOIRE */
+	DROP TABLE accessoire;
+
+	CREATE TABLE IF NOT EXISTS accessoire (idAccessoire int(250) NOT NULL AUTO_INCREMENT, nomAccessoire varchar(45), descriptionAccessoire varchar(150), media_IdMedia int);
+
+	ALTER TABLE accessoire ADD CONSTRAINT pk_AccessoireID PRIMARY KEY (idAccessoire);
+	ALTER TABLE accessoire ADD CONSTRAINT fk_Accessoire_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+
+/* TYPEACCESSOIRE */
+	DROP TABLE typeAccessoire;
+
+	CREATE TABLE IF NOT EXISTS accessoire (idTypeAccessoire int(250) NOT NULL AUTO_INCREMENT,nomTypeAccessoire varchar(50), bActiveTypeAccessoire int(2), accessoire_idAccessoire int);
+
+	ALTER TABLE typeAccessoire ADD CONSTRAINT pk_TypeAccessoireID PRIMARY KEY (idTypeAccessoire);
+	ALTER TABLE typeAccessoire ADD CONSTRAINT fk_TypeAccessoire_Accessoire FOREIGN KEY (accessoire_idAccessoire) REFERENCES accessoire(idAccessoire);
+
+/* ACHAT */
+	DROP TABLE achat;
+
+	CREATE TABLE IF NOT EXISTS achat (utilisateur_IdUtilisateur int, produit_IdProduit int, modifCredit int);
+
+	ALTER TABLE achat ADD CONSTRAINT pk_AchatID PRIMARY KEY (utilisateur_IdUtilisateur, produit_IdProduit);
+	ALTER TABLE achat ADD CONSTRAINT fk_Achat_Utilisateur FOREIGN KEY (utilisateur_IdUtilisateur) REFERENCES utilisateur(idUtilisateur);
+	ALTER TABLE achat ADD CONSTRAINT fk_Achat_Produit FOREIGN KEY (produit_IdProduit) REFERENCES produit(idProduit);
+
+/* PRODUIT */
+	DROP TABLE produit;
+
+	CREATE TABLE IF NOT EXISTS produit (idProduit int(250) NOT NULL AUTO_INCREMENT, typeProduit varchar(45), credit_IdCredit int, personnage_IdPersonnage int, Univers_IdUnivers int);
+
+	ALTER TABLE produit ADD CONSTRAINT pk_ProduitID PRIMARY KEY (idProduit);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Credit FOREIGN KEY (credit_IdCredit) REFERENCES credit(idCredit);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Personnage FOREIGN KEY (personnage_IdPersonnage int) REFERENCES personnage(idPersonnage);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Univers FOREIGN KEY (Univers_IdUnivers) REFERENCES univers(idUnivers);
+
+/* CREDIT */
+	DROP TABLE credit;
+
+	CREATE TABLE IF NOT EXISTS credit (idCredit int(250) NOT NULL AUTO_INCREMENT, nombreCredit int(100), coutCredit int(100));
+
+	ALTER TABLE credit ADD CONSTRAINT pk_CreditID PRIMARY KEY (idCredit);
+
+/* DROP */
+	DROP TABLE histoire;
+	DROP TABLE media;
+	DROP TABLE fonction;
+	DROP TABLE parcour;
+	DROP TABLE produit;
+	DROP TABLE contenu;
+	DROP TABLE credit;
+	DROP TABLE action;
+	DROP TABLE accessoire;
+	DROP TABLE personalisation;
+	DROP TABLE decor;
+	DROP TABLE faction;
+	DROP TABLE personnage;
+	DROP TABLE univers;
+
+	DROP TABLE typemedia;
+	DROP TABLE obstacle;
+	DROP TABLE utilisateur;
+	DROP TABLE achat;
+	DROP TABLE asmr;
+	DROP DATABASE db_Kidory;
+
+/* CREATE - ALTER */
+	CREATE DATABASE db_Kidory;
+	CREATE TABLE IF NOT EXISTS asmr (
+  idAsmr int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  luminositeAsmr int(10) NOT NULL,
+  volumeAsmr int(10) NOT NULL
+);
+
+					CREATE TABLE IF NOT EXISTS histoire (
+  						idHistoire int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  						titreHistoire varchar(30) NOT NULL DEFAULT 'Mon Histoire', idUtilisateur int,idUnivers int,idAsmr int);
+CREATE TABLE IF NOT EXISTS media (
+  idMedia int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  designationMedia varchar(100) NOT NULL,
+  urlMedia varchar(150) NOT NULL
+);
+	CREATE TABLE IF NOT EXISTS parcour (
+  idParcour int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nomParcour varchar(45) NOT NULL,
+  niveauParcour int(10) NOT NULL,
+  typeParcour varchar(45) NOT NULL
+);
+	CREATE TABLE IF NOT EXISTS personnage (
+  idPersonnage int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nomPersonnage varchar(45) NOT NULL,
+  descriptionPersonnage varchar(250) NOT NULL,
+  typePersonnage int(1) NOT NULL DEFAULT '0' COMMENT '0 = NPC // 1 = Hero',
+  coutPersonnage int(100) NOT NULL,
+  disponiblePersonnage varchar(45) NOT NULL
+);
+	CREATE TABLE IF NOT EXISTS typemedia (
+  idTypeMedia int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  typeTypeMedia varchar(45) NOT NULL, idMedia int
+);
+	CREATE TABLE IF NOT EXISTS univers (
+  idUnivers int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nomUnivers varchar(50) NOT NULL,
+  descriptionUnivers varchar(250) NOT NULL,
+  coutUnivers int(20) NOT NULL,
+  disponibleUnivers varchar(45) NOT NULL
+);
+	CREATE TABLE IF NOT EXISTS utilisateur (
+  idUtilisateur int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  pseudoUtilisateur varchar(20) DEFAULT NULL,
+  ageUtilisateur date DEFAULT NULL,
+  creditUtilisateur int(100) DEFAULT NULL
+);
+	CREATE TABLE IF NOT EXISTS obstacle (  histoire_IdHistoire int NOT NULL, parcour_IdParcour int NOT NULL);
+	CREATE TABLE IF NOT EXISTS faction (  histoire_IdHistoire int NOT NULL, personnage_IdPersonnage int NOT NULL, typeFaction int(1) NOT NULL DEFAULT '1' COMMENT '0 = ennemis // 1 = amis');
+	CREATE TABLE IF NOT EXISTS decor (  parcour_IdParcour int NOT NULL, media_IdMedia int NOT NULL);
+	CREATE TABLE IF NOT EXISTS actionPerso (  personnage_IdPersonnage int NOT NULL, media_IdMedia int NOT NULL, descriptionAction varchar(100), positionX int(10), positionY int(10) );
+	CREATE TABLE IF NOT EXISTS personalisation (  personnage_IdPersonnage int NOT NULL, accessoire_IdAccessoire int NOT NULL);
+	CREATE TABLE IF NOT EXISTS contenu (  univers_IdUnivers int NOT NULL, media_IdMedia int NOT NULL);
+	CREATE TABLE IF NOT EXISTS fonction ( media_IdMedia int NOT NULL, asmr_IdAsmr int NOT NULL);
+	CREATE TABLE IF NOT EXISTS accessoire (idAccessoire int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY, nomAccessoire varchar(45), descriptionAccessoire varchar(150), media_IdMedia int);
+	CREATE TABLE IF NOT EXISTS accessoire (idTypeAccessoire int(250) NOT NULL AUTO_INCREMENT,nomTypeAccessoire varchar(50), bActiveTypeAccessoire int(2), accessoire_idAccessoire int);
+	CREATE TABLE IF NOT EXISTS achat (utilisateur_IdUtilisateur int NOT NULL, produit_IdProduit int NOT NULL, modifCredit int);
+	CREATE TABLE IF NOT EXISTS produit (idProduit int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY, typeProduit varchar(45), credit_IdCredit int, personnage_IdPersonnage int, Univers_IdUnivers int);
+	CREATE TABLE IF NOT EXISTS credit (idCredit int(250) NOT NULL AUTO_INCREMENT PRIMARY KEY, nombreCredit int(100), coutCredit int(100));
+	CREATE TABLE IF NOT EXIST typePersonnage ( idTypePersonnage int(250) NOT NULL AUTO_INCREMENT, nomTypePersonnage varchar(45), bActiveTypePersonnage int(2), idPersonnage int);
+
+
+
+	ALTER TABLE contenu ADD CONSTRAINT pk_ContenuID PRIMARY KEY (univers_IdUnivers, media_IdMedia);
+	ALTER TABLE fonction ADD CONSTRAINT pk_FonctionID PRIMARY KEY (media_IdMedia, asmr_IdAsmr);
+	ALTER TABLE personalisation ADD CONSTRAINT pk_PersonalisationID PRIMARY KEY (personnage_IdPersonnage, accessoire_IdAccessoire);
+	ALTER TABLE actionPerso ADD CONSTRAINT pk_ActionPersoID PRIMARY KEY (personnage_IdPersonnage, media_IdMedia);
+	ALTER TABLE achat ADD CONSTRAINT pk_AchatID PRIMARY KEY (utilisateur_IdUtilisateur, produit_IdProduit);
+	ALTER TABLE obstacle ADD CONSTRAINT pk_ObstacleID PRIMARY KEY (histoire_IdHistoire,parcour_IdParcour);
+	ALTER TABLE faction ADD CONSTRAINT pk_FactionID PRIMARY KEY (histoire_IdHistoire, personnage_IdPersonnage);
+	ALTER TABLE decor ADD CONSTRAINT pk_DecorID PRIMARY KEY (parcour_IdParcour, media_IdMedia);
+	ALTER TABLE typeAccessoire ADD CONSTRAINT pk_TypeAccessoireID PRIMARY KEY (idTypeAccessoire);
+	ALTER TABLE typePersonnage ADD CONSTRAINT pk_TypePersonnageID PRIMARY KEY (idPersonnage);
+
+
+	ALTER TABLE typeAccessoire ADD CONSTRAINT fk_TypeAccessoire_Accessoire FOREIGN KEY (accessoire_idAccessoire) REFERENCES accessoire(idAccessoire);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Utilisateur FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Univers FOREIGN KEY (idUnivers) REFERENCES univers(idUnivers);
+	ALTER TABLE histoire ADD CONSTRAINT fk_Histoire_Asmr FOREIGN KEY (idUtilisateur) REFERENCES utilisateur(idUtilisateur);
+	ALTER TABLE typemedia ADD CONSTRAINT fk_TypeMedia_Media FOREIGN KEY (idMedia) REFERENCES media(idMedia);
+	ALTER TABLE obstacle ADD CONSTRAINT fk_Obstacle_Histoire FOREIGN KEY (histoire_IdHistoire) REFERENCES histoire(idHistoire);
+	ALTER TABLE obstacle ADD CONSTRAINT fk_Obstacle_Parcour FOREIGN KEY (parcour_IdParcour) REFERENCES parcour(idParcour);
+	ALTER TABLE faction ADD CONSTRAINT fk_Faction_Histoire FOREIGN KEY (histoire_IdHistoire) REFERENCES histoire(idHistoire);
+	ALTER TABLE faction ADD CONSTRAINT fk_Faction_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE personalisation ADD CONSTRAINT fk_Personalisation_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE personalisation ADD CONSTRAINT fk_Personalisation_Accessoire FOREIGN KEY (accessoire_IdAccessoire) REFERENCES accessoire(idAccessoire);
+	ALTER TABLE actionPerso ADD CONSTRAINT fk_ActionPerso_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE actionPerso ADD CONSTRAINT fk_ActionPerso_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Contenu_Univers FOREIGN KEY (univers_IdUnivers) REFERENCES univers(idUnivers);
+	ALTER TABLE contenu ADD CONSTRAINT fk_Contenu_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+	ALTER TABLE fonction ADD CONSTRAINT fk_Fonction_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+	ALTER TABLE fonction ADD CONSTRAINT fk_Fonction_Asmr FOREIGN KEY (asmr_IdAsmr) REFERENCES media(idAsmr);
+	ALTER TABLE achat ADD CONSTRAINT fk_Achat_Utilisateur FOREIGN KEY (utilisateur_IdUtilisateur) REFERENCES utilisateur(idUtilisateur);
+	ALTER TABLE achat ADD CONSTRAINT fk_Achat_Produit FOREIGN KEY (produit_IdProduit) REFERENCES produit(idProduit);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Credit FOREIGN KEY (credit_IdCredit) REFERENCES credit(idCredit);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Personnage FOREIGN KEY (personnage_IdPersonnage) REFERENCES personnage(idPersonnage);
+	ALTER TABLE produit ADD CONSTRAINT fk_Produit_Univers FOREIGN KEY (Univers_IdUnivers) REFERENCES univers(idUnivers);
+	ALTER TABLE accessoire ADD CONSTRAINT fk_Accessoire_Media FOREIGN KEY (media_IdMedia) REFERENCES media(idMedia);
+	ALTER TABLE typePersonnage ADD CONSTRAINT fk_TypePersonnage_Personnage FOREIGN KEY (idPersonnage) REFERENCES personnage(idPersonnage );
+	
+
+	ALTER TABLE decor ADD CONSTRAINT fk_Decor_Parcour FOREIGN KEY parcour_IdParcour REFERENCES parcour(idParcour);
+	ALTER TABLE decor ADD CONSTRAINT fk_Decor_Media FOREIGN KEY media_IdMedia REFERENCES media(idMedia);
+	
+
+
+
+
+
+
+

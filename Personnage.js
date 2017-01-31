@@ -50,6 +50,9 @@ var unique = false;
 
 loadObjetmain['sabre']=0;
 
+
+
+
 function updateFPS() {
 	
 	curFPS = numFramesDrawn;
@@ -86,13 +89,16 @@ function prepareCanvas(canvasDiv, canvasWidth, canvasHeight, folderName)
         loadImage('sabre-pirate','Objets');
         loadImage('parchemin-pirate','Objets');
 
+        
         redraw();
 }
 
+// Fait apparaitre l'objet dans la main du hero
 function loadObjet(name){
     objet = name;
 }
 
+// Fait apparaitre les images du corps du hero
 function loadImage(name, folderName) {
   
   images[name] = new Image();
